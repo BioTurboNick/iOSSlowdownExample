@@ -1,0 +1,48 @@
+﻿<?xml version="1.0" encoding="utf-8" ?>
+<ContentPage xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+             xmlns:e="clr-namespace:iOSSlowdown.Enums"
+             xmlns:vc="clr-namespace:iOSSlowdown.ValueConverters"
+             xmlns:vm="clr-namespace:iOSSlowdown.ViewModels"
+             xmlns:view="clr-namespace:iOSSlowdown.Views"
+             xmlns:c="clr-namespace:iOSSlowdown.Controls"
+             xmlns:strings="clr-namespace:iOSSlowdown.Resources.Strings"
+             xmlns:local="clr-namespace:iOSSlowdown"
+             xmlns:toolkit="http://schemas.microsoft.com/dotnet/2022/maui/toolkit"
+             x:Class="iOSSlowdown.Views.MainPage"
+             Title="{x:Static strings:AppResources.BloodDifferential}"
+             BackgroundColor="{AppThemeBinding Dark={StaticResource Primary}}"
+             FlowDirection="{x:Static Device.FlowDirection}"
+             x:Name="root">
+
+    <Grid>
+        <Grid>
+            <Grid>
+                <Grid
+                    Padding="5"
+                    RowSpacing="5"
+                    ColumnSpacing="5"
+                    RowDefinitions="*,*,*,*"
+                    ColumnDefinitions="*,*,*"
+                    BindableLayout.ItemsSource="{Binding BloodCells, Source={x:Reference root}, Mode=OneTime}">
+
+                    <BindableLayout.ItemTemplate>
+                        <DataTemplate x:DataType="view:CellCounterInfo">
+                            <c:SliderControl
+                                            Color="{StaticResource PrimaryDark}"
+                                            TextColor="{StaticResource White}"
+                                            IsSliderMinusMarkVisible="True"
+                                            IsMiniCounterVisible="True"
+                                            TappedCommand="{Binding Counter.Increment, Mode=OneTime}"
+                                            CountValue="{Binding Counter.Value}"
+                                            Grid.Row="{Binding RowIndex}"
+                                            Grid.Column="{Binding ColumnIndex}" />
+                        </DataTemplate>
+                    </BindableLayout.ItemTemplate>
+
+                </Grid>
+            </Grid>
+        </Grid>
+    </Grid>
+
+</ContentPage>

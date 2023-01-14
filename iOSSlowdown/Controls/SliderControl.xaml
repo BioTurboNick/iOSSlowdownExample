@@ -1,0 +1,175 @@
+﻿<?xml version="1.0" encoding="UTF-8"?>
+<Grid xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
+      xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+      xmlns:controls="clr-namespace:iOSSlowdown.Controls"
+      xmlns:vc="clr-namespace:iOSSlowdown.ValueConverters"
+      xmlns:toolkit="http://schemas.microsoft.com/dotnet/2022/maui/toolkit"
+      x:Class="iOSSlowdown.Controls.SliderControl"
+      FlowDirection="{x:Static Device.FlowDirection}"
+      x:Name="root">
+    <Grid.Resources>
+        <ResourceDictionary>
+            <vc:NullableIntConverter x:Key="toNullableInt" />
+            <toolkit:InvertedBoolConverter x:Key="negation" />
+            <toolkit:IsStringNotNullOrEmptyConverter x:Key="stringNotNullOrEmpty" />
+            <toolkit:IsStringNullOrEmptyConverter x:Key="stringNullOrEmpty" />
+        </ResourceDictionary>
+    </Grid.Resources>
+
+    <AbsoluteLayout
+        BindingContext="{Binding Source={x:Reference root}}"
+        x:DataType="controls:SliderControl">
+
+        <Grid x:Name="handleChannelAreaBackground"
+              AbsoluteLayout.LayoutFlags="All"
+              BackgroundColor="{AppThemeBinding Light={StaticResource Gray500}, Dark={StaticResource PrimaryDark}}">
+        </Grid>
+
+        <Grid x:Name="sideChannelAreaBackground"
+              AbsoluteLayout.LayoutFlags="All"
+              BackgroundColor="{AppThemeBinding Light={StaticResource Gray500}, Dark={StaticResource PrimaryDark}}"
+              IsVisible="{Binding IsSlideSideEnabled}">
+            <!-- Have to use grids instead of Rectangles to avoid infinite layout bug. -->
+            <Grid
+                BackgroundColor="{AppThemeBinding Light={StaticResource Gray200}, Dark={StaticResource Gray400}}"
+                Margin="1,1,0,1" />
+        </Grid>
+
+        <Grid x:Name="sideChannelArea"
+              AbsoluteLayout.LayoutFlags="All"
+              IsVisible="{Binding IsSlideSideEnabled}">
+            <Image AbsoluteLayout.LayoutFlags="All"
+                   IsVisible="{Binding IsHorizontalLayout}"
+                   Source="{Binding SlideSideHorizontalImageSource}" />
+            <Image AbsoluteLayout.LayoutFlags="All"
+                   IsVisible="{Binding IsHorizontalLayout, Converter={StaticResource negation}}"
+                   Source="{Binding SlideSideVerticalImageSource}" />
+        </Grid>
+        
+        <AbsoluteLayout
+            x:Name="handleChannelArea"
+            AbsoluteLayout.LayoutFlags="All">
+            
+            <Grid
+                BackgroundColor="{AppThemeBinding Light={StaticResource Gray200}, Dark={StaticResource Gray400}}"
+                AbsoluteLayout.LayoutFlags="All"
+                AbsoluteLayout.LayoutBounds="0, 0, 1, 1"
+                Margin="1" />
+
+            <AbsoluteLayout
+                x:Name="exposedSliderPanel"
+                AbsoluteLayout.LayoutFlags="All">
+                
+                <Grid
+                    AbsoluteLayout.LayoutFlags="All"
+                    IsVisible="{Binding IsHorizontalLayout, Converter={StaticResource negation}}"
+                    AbsoluteLayout.LayoutBounds="0.5,0.85,0.5,0.5">
+
+                    <Grid
+                        IsVisible="{Binding SlideImageSource, Converter={StaticResource stringNullOrEmpty}}">
+
+                    </Grid>
+
+                    <Grid
+                        IsVisible="{Binding SlideImageSource, Converter={StaticResource stringNotNullOrEmpty}}">
+
+                        <Image
+                            Opacity="0.5"
+                            VerticalOptions="Center"
+                            Source="{Binding SlideImageSource}" />
+
+                    </Grid>
+                    
+                </Grid>
+
+                <Grid
+                    AbsoluteLayout.LayoutFlags="All"
+                    IsVisible="{Binding IsHorizontalLayout, Source={x:Reference root}}"
+                    AbsoluteLayout.LayoutBounds="0.85,0.5,0.5,0.5">
+
+                    <Grid
+                        IsVisible="{Binding SlideImageSource, Source={x:Reference root}, Converter={StaticResource stringNullOrEmpty}}">
+
+                    </Grid>
+
+                    <Grid
+                        IsVisible="{Binding SlideImageSource, Source={x:Reference root}, Converter={StaticResource stringNotNullOrEmpty}}">
+
+                        <Image
+                            Opacity="0.5"
+                            AbsoluteLayout.LayoutFlags="All"
+                            AbsoluteLayout.LayoutBounds="0,0.5,1,1"
+                            Source="{Binding SlideImageSource, Source={x:Reference root}}" />
+
+                    </Grid>
+                    
+                </Grid>
+            </AbsoluteLayout>
+
+            <Grid
+                x:Name="handle"
+                AbsoluteLayout.LayoutFlags="All"
+                BackgroundColor="{Binding Color, Source={x:Reference root}}">
+
+                <ContentView
+                    BackgroundColor="White"
+                    IsVisible="{Binding HandleImageSource, Source={x:Reference root}, Converter={StaticResource stringNotNullOrEmpty}}"
+                    Margin="2">
+                    
+                    <Image
+                        Source="{Binding HandleImageSource, Source={x:Reference root}}" />
+                    
+                </ContentView>
+                
+                <ContentView
+                    HorizontalOptions="Center"
+                    Margin="3,0">
+                    
+                    <Label
+                        Text="{Binding LabelText, Source={x:Reference root}}"
+                        HorizontalTextAlignment="Center"
+                        TextColor="{Binding TextColor, Source={x:Reference root}}"
+                        FontAttributes="Bold"
+                        FontSize="Medium"
+                        Opacity="0.9" />
+                    
+                </ContentView>
+
+                <ContentView
+                    VerticalOptions="End"
+                    IsVisible="{Binding IsMiniCounterVisible, Source={x:Reference root}}"
+                    Margin="3,0">
+                    
+                    <Label 
+                        FontAttributes="Bold"
+                        Text="{Binding CountValue, Source={x:Reference root}, Converter={StaticResource toNullableInt}, ConverterParameter=—}"
+                        TextColor="{Binding TextColor, Source={x:Reference root}}"
+                        Opacity="0.9" />
+                    
+                </ContentView>
+
+
+                <AbsoluteLayout
+                    IsVisible="{Binding IsHandlePlusMarkVisible, Source={x:Reference root}}">
+                    
+                    <Grid
+                        AbsoluteLayout.LayoutFlags="All"
+                        AbsoluteLayout.LayoutBounds="0.5,0.5,0.15,0.15">
+                        
+                        
+                    </Grid>
+                    
+                </AbsoluteLayout>
+
+            </Grid>
+
+
+        </AbsoluteLayout>
+    </AbsoluteLayout>
+
+    <ContentView>
+        <ContentView.GestureRecognizers>
+            <TapGestureRecognizer Tapped="Tapped"/>
+        </ContentView.GestureRecognizers>
+    </ContentView>
+</Grid>

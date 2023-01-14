@@ -1,0 +1,106 @@
+﻿<Project Sdk="Microsoft.NET.Sdk">
+
+	<PropertyGroup>
+		<TargetFrameworks>net7.0-ios</TargetFrameworks>
+		<!--<TargetFrameworks Condition="$([MSBuild]::IsOSPlatform('windows'))">$(TargetFrameworks);net7.0-windows10.0.19041.0</TargetFrameworks>-->
+		
+		<OutputType>Exe</OutputType>
+		<RootNamespace>iOSSlowdown</RootNamespace>
+		<UseMaui>true</UseMaui>
+		<SingleProject>true</SingleProject>
+		<ImplicitUsings>enable</ImplicitUsings>
+		<Nullable>enable</Nullable>
+
+		<!-- Display name -->
+		<ApplicationTitle>iOSSlowdown</ApplicationTitle>
+
+		<!-- App Identifier -->
+		<ApplicationId>com.NicholasBauer.iOSSlowdown.XF</ApplicationId>
+		<ApplicationIdGuid>fc336891-0bf0-4323-a5c7-d6ff0cb16ba9</ApplicationIdGuid>
+
+		<!-- Versions -->
+		<ApplicationDisplayVersion>4.0</ApplicationDisplayVersion>
+		<ApplicationVersion>4</ApplicationVersion>
+
+		<SupportedOSPlatformVersion Condition="$([MSBuild]::GetTargetPlatformIdentifier('$(TargetFramework)')) == 'ios'">11.0</SupportedOSPlatformVersion>
+	</PropertyGroup>
+
+	<PropertyGroup Label="MultilingualAppToolkit">
+		<MultilingualAppToolkitVersion>4.0</MultilingualAppToolkitVersion>
+		<MultilingualFallbackLanguage>en-US</MultilingualFallbackLanguage>
+		<TranslationReport Condition="'$(Configuration)' == 'Release'">true</TranslationReport>
+		<SuppressPseudoWarning Condition="'$(Configuration)' == 'Debug'">true</SuppressPseudoWarning>
+		<MATProjectType>AnonResx</MATProjectType>
+	</PropertyGroup>
+	<Import Project="$(MSBuildExtensionsPath)\Microsoft\Multilingual App Toolkit\Microsoft.Multilingual.ResxResources.targets" Label="MultilingualAppToolkit" Condition="Exists('$(MSBuildExtensionsPath)\Microsoft\Multilingual App Toolkit\v$(MultilingualAppToolkitVersion)\Microsoft.Multilingual.ResxResources.targets')" />
+	<Target Name="MATPrerequisite" BeforeTargets="PrepareForBuild" Condition="!Exists('$(MSBuildExtensionsPath)\Microsoft\Multilingual App Toolkit\Microsoft.Multilingual.ResxResources.targets')" Label="MultilingualAppToolkit">
+		<Warning Text="$(MSBuildProjectFile) is Multilingual build enabled, but the Multilingual App Toolkit is unavailable during the build. If building with Visual Studio, please check to ensure that toolkit is properly installed." />
+	</Target>
+
+	<PropertyGroup Condition="'$(Configuration)|$(TargetFramework)'=='Release|net7.0-ios'">
+	  <ProvisioningType>manual</ProvisioningType>
+	  <CodesignKey>Apple Distribution: Nicholas Bauer (3Z9E3V7SKF)</CodesignKey>
+	  <CodesignProvision>HS4AdHoc</CodesignProvision>
+	  <UseInterpreter>true</UseInterpreter>
+      <EnableAssemblyILStripping>false</EnableAssemblyILStripping>
+	</PropertyGroup>
+
+	<PropertyGroup Condition="'$(TargetFramework)'=='net7.0-ios'">
+	  <CodesignKey>Apple Development: Created via API (BPLFW8DSP4)</CodesignKey>
+	  <CodesignProvision>VS: com.NicholasBauer.iOSSlowdown.XF Development</CodesignProvision>
+	</PropertyGroup>
+
+	<ItemGroup>
+		<!-- App Icon -->
+		<MauiIcon Condition="$([MSBuild]::GetTargetPlatformIdentifier('$(TargetFramework)')) == 'ios'" Include="Resources\AppIcon\appicon.svg" ForegroundFile="Resources\AppIcon\icon_foreground_ios.png" Color="#125082" />
+		<MauiIcon Include="Resources\AppIcon\appicon.svg" ForegroundFile="Resources\AppIcon\icon_foreground_android.png" Color="#125082" />
+
+		<!-- Splash Screen -->
+		<MauiSplashScreen Condition="$([MSBuild]::GetTargetPlatformIdentifier('$(TargetFramework)')) == 'android'" Include="Resources\Splash\splash_foreground_android.png" Color="#125082" />
+		<MauiSplashScreen Include="Resources\Splash\splash.png" Color="#125082" />
+
+		<!-- Images -->
+		<MauiImage Include="Resources\Images\*" />
+
+		<!-- Custom Fonts -->
+		<MauiFont Include="Resources\Fonts\*" />
+		<MauiFont Remove="Resources\Fonts\SegoeFluentIcons.ttf" />
+
+		<!-- Raw Assets (also remove the "Resources\Raw" prefix) -->
+		<MauiAsset Include="Resources\Raw\**" LogicalName="%(RecursiveDir)%(Filename)%(Extension)" />
+		<MauiAsset Remove="Resources\Raw\AboutAssets.txt" />
+	</ItemGroup>
+
+	<ItemGroup>
+		<LinkDescription Include="Platforms\iOS\Linker.xml" />
+	</ItemGroup>
+
+	<ItemGroup>
+		<Compile Update="Resources\AppResources.Designer.cs">
+			<DesignTime>True</DesignTime>
+			<AutoGen>True</AutoGen>
+			<DependentUpon>AppResources.resx</DependentUpon>
+		</Compile>
+	</ItemGroup>
+
+	<ItemGroup>
+		<EmbeddedResource Update="Resources\AppResources.resx">
+			<Generator>ResXFileCodeGenerator</Generator>
+			<LastGenOutput>AppResources.Designer.cs</LastGenOutput>
+		</EmbeddedResource>
+	</ItemGroup>
+
+	<ItemGroup>
+		<PackageReference Include="CommunityToolkit.Maui" Version="3.1.0" />
+		<PackageReference Include="Microsoft.AppCenter.Analytics" Version="5.0.1" />
+		<PackageReference Include="Microsoft.AppCenter.Crashes" Version="5.0.1" />
+		<PackageReference Include="Microsoft.EntityFrameworkCore.Sqlite" Version="7.0.1" />
+		<PackageReference Include="Microsoft.Extensions.Logging.Debug" Version="7.0.0" />
+		<PackageReference Include="Plugin.InAppBilling" Version="6.7.0" />
+	</ItemGroup>
+
+	<ItemGroup>
+	  <Folder Include="Resources\Strings\" />
+	</ItemGroup>
+
+</Project>

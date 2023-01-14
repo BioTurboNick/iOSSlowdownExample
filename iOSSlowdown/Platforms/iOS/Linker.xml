@@ -1,0 +1,13 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<linker>
+  <assembly fullname="mscorlib">
+    <type fullname="System.DateTime" preserve="methods" />
+    <type fullname="System.Globalization.ThaiBuddhistCalendar" />
+	<type fullname="System.Globalization.HijriCalendar" />
+	<type fullname="System.Globalization.UmAlQuraCalendar" />
+  </assembly>
+  <assembly fullname="System.Core">
+    <type fullname="System.Linq.Expressions.Expression`1" />
+    <type fullname="System.Linq.Queryable" />
+  </assembly>
+</linker>
